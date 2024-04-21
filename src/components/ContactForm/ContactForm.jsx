@@ -1,10 +1,9 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
-import { nanoid } from 'nanoid';
 import * as Yup from 'yup';
-import { addContact } from '/src/redux/contactsSlice.js';
 
 import css from './ContactForm.module.css';
+import { addContact } from '../../redux/contactsOps';
 
 const ContactForm = () => {
   const initialContactValues = {
@@ -14,7 +13,7 @@ const ContactForm = () => {
   const dispatch = useDispatch();
 
   const handleSubmit = (values, actions) => {
-    const newContact = { ...values, id: nanoid() };
+    const newContact = values;
     dispatch(addContact(newContact));
 
     actions.resetForm();
@@ -24,7 +23,7 @@ const ContactForm = () => {
   const FeedbackSchema = Yup.object().shape({
     name: Yup.string().min(3, 'Too Short!').max(50, 'Too Long!').required('Required').trim(),
     number: Yup.string()
-      .matches(/^\d{3}-\d{2}-\d{2}$/g, 'The number format must be 123-45-67')
+      .matches(/^\d{3}-\d{3}-\d{4}$/g, 'The number format must be xxx-xxxx-xxxx')
       .required('Required')
       .trim(),
   });
@@ -44,7 +43,7 @@ const ContactForm = () => {
           </label>
           <label className={css.form_input}>
             <span>Number</span>
-            <Field type="tel" name="number" placeholder="xxx-xx-xx"></Field>
+            <Field type="tel" name="number" placeholder="111-222-3333"></Field>
             <ErrorMessage name="number" component="span" />
           </label>
           <button className={css.button} type="submit">
